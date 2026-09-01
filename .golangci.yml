@@ -1,3 +1,5 @@
+version: "2"
+
 linters:
   enable:
     - errcheck
@@ -6,8 +8,8 @@ linters:
     - unused
     - ineffassign
 
-issues:
-  exclude-rules:
-    - path: _test\.go
-      linters:
-        - errcheck
+  exclusions:
+    rules:
+      - path: _test\.go
+        linters:
+          - errcheck

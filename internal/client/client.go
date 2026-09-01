@@ -55,7 +55,7 @@ func (c *RoadieClient) doRequest(ctx context.Context, method, path string, body 
 	if err != nil {
 		return nil, 0, fmt.Errorf("%s %s: %w", method, path, err)
 	}
-	defer resp.Body.Close()
+	defer func() { _ = resp.Body.Close() }()
 
 	respBody, err := io.ReadAll(resp.Body)
 	if err != nil {
