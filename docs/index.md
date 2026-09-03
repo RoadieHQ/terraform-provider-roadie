@@ -21,13 +21,18 @@ terraform {
 }
 
 provider "roadie" {
-  host      = "https://app-api.roadie.so"
-  api_token = var.roadie_api_token
+  host         = "https://app-api.roadie.so"
+  api_token    = var.roadie_api_token
+  workspace_id = var.roadie_workspace_id
 }
 
 variable "roadie_api_token" {
   type      = string
   sensitive = true
+}
+
+variable "roadie_workspace_id" {
+  type = string
 }
 ```
 
@@ -38,3 +43,4 @@ variable "roadie_api_token" {
 
 - `api_token` (String, Sensitive) Service token for authentication (format: rst_...). Can also be set via ROADIE_API_TOKEN environment variable.
 - `host` (String) The Roadie backend URL (e.g. https://api.roadie.so). Can also be set via ROADIE_HOST environment variable.
+- `workspace_id` (String) Workspace UUID for all managed resources. Omit for the default organization workspace. Can also be set via ROADIE_WORKSPACE_ID environment variable.
