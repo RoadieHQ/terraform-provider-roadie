@@ -213,7 +213,6 @@ func (r *DataSourceResource) adoptExistingDataSource(ctx context.Context, plan *
 	var listResp struct {
 		Data []struct {
 			ID   string `json:"id"`
-			Name string `json:"name"`
 			Slug string `json:"slug"`
 		} `json:"data"`
 	}
@@ -222,16 +221,16 @@ func (r *DataSourceResource) adoptExistingDataSource(ctx context.Context, plan *
 		return
 	}
 
-	name := plan.Name.ValueString()
+	slug := plan.Slug.ValueString()
 	var existingID string
 	for _, ds := range listResp.Data {
-		if ds.Name == name {
+		if ds.Slug == slug {
 			existingID = ds.ID
 			break
 		}
 	}
 	if existingID == "" {
-		resp.Diagnostics.AddError("Error adopting data source", fmt.Sprintf("Data source with name %q reported as existing but not found", name))
+		resp.Diagnostics.AddError("Error adopting data source", fmt.Sprintf("Data source with slug %q reported as existing but not found", slug))
 		return
 	}
 
