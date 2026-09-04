@@ -21,8 +21,9 @@ type RoadieProvider struct {
 }
 
 type RoadieProviderModel struct {
-	Host     types.String `tfsdk:"host"`
-	ApiToken types.String `tfsdk:"api_token"`
+	Host        types.String `tfsdk:"host"`
+	ApiToken    types.String `tfsdk:"api_token"`
+	WorkspaceID types.String `tfsdk:"workspace_id"`
 }
 
 func New(version string) func() provider.Provider {
@@ -49,6 +50,10 @@ func (p *RoadieProvider) Schema(_ context.Context, _ provider.SchemaRequest, res
 				Optional:    true,
 				Sensitive:   true,
 			},
+			"workspace_id": schema.StringAttribute{
+				Description: "Workspace UUID for all managed resources. Omit for the default organization workspace. Can also be set via ROADIE_WORKSPACE_ID environment variable.",
+				Optional:    true,
+			},
 		},
 	}
 }
@@ -68,6 +73,11 @@ func (p *RoadieProvider) Configure(ctx context.Context, req provider.ConfigureRe
 	apiToken := os.Getenv("ROADIE_API_TOKEN")
 	if !config.ApiToken.IsNull() && !config.ApiToken.IsUnknown() {
 		apiToken = config.ApiToken.ValueString()
+	}
+
+	workspaceID := os.Getenv("ROADIE_WORKSPACE_ID")
+	if !config.WorkspaceID.IsNull() && !config.WorkspaceID.IsUnknown() {
+		workspaceID = config.WorkspaceID.ValueString()
 	}
 
 	if host == "" {
@@ -90,7 +100,7 @@ func (p *RoadieProvider) Configure(ctx context.Context, req provider.ConfigureRe
 		return
 	}
 
-	c := client.New(host, apiToken, p.version)
+	c := client.New(host, apiToken, workspaceID, p.version)
 	resp.DataSourceData = c
 	resp.ResourceData = c
 }

@@ -12,18 +12,20 @@ import (
 )
 
 type RoadieClient struct {
-	BaseURL    string
-	Token      string
-	HTTPClient *http.Client
-	UserAgent  string
+	BaseURL     string
+	Token       string
+	WorkspaceID string
+	HTTPClient  *http.Client
+	UserAgent   string
 }
 
-func New(baseURL, token, version string) *RoadieClient {
+func New(baseURL, token, workspaceID, version string) *RoadieClient {
 	return &RoadieClient{
-		BaseURL:    strings.TrimRight(baseURL, "/"),
-		Token:      token,
-		HTTPClient: &http.Client{Timeout: 30 * time.Second},
-		UserAgent:  "terraform-provider-roadie/" + version,
+		BaseURL:     strings.TrimRight(baseURL, "/"),
+		Token:       token,
+		WorkspaceID: workspaceID,
+		HTTPClient:  &http.Client{Timeout: 30 * time.Second},
+		UserAgent:   "terraform-provider-roadie/" + version,
 	}
 }
 
@@ -47,6 +49,9 @@ func (c *RoadieClient) doRequest(ctx context.Context, method, path string, body 
 	req.Header.Set("Authorization", "Bearer "+c.Token)
 	req.Header.Set("Accept", "application/json")
 	req.Header.Set("User-Agent", c.UserAgent)
+	if c.WorkspaceID != "" {
+		req.Header.Set("x-openroadie-workspace-id", c.WorkspaceID)
+	}
 	if body != nil {
 		req.Header.Set("Content-Type", "application/json")
 	}
