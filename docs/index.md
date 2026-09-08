@@ -42,5 +42,5 @@ variable "roadie_workspace_id" {
 ### Optional
 
 - `api_token` (String, Sensitive) Service token for authentication (format: rst_...). Can also be set via ROADIE_API_TOKEN environment variable.
-- `host` (String) The Roadie backend URL (e.g. https://api.roadie.so). Can also be set via ROADIE_HOST environment variable.
+- `host` (String) The Roadie backend URL (e.g. https://app-api.roadie.so). Can also be set via ROADIE_HOST environment variable.
 - `workspace_id` (String) Workspace UUID for all managed resources. Omit for the default organization workspace. Can also be set via ROADIE_WORKSPACE_ID environment variable.
